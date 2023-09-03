@@ -3,7 +3,6 @@ import java.util.HashSet;
 
 public class Compose {
     Chord[] chords;
-    
 
     public Compose(Chord[] chords) {
         this.chords = chords;
@@ -20,28 +19,28 @@ public class Compose {
     }
 
     public void recur(HashSet<String> seen, HashSet<String> solutions) {
-        String state = Arrays.toString(Configs.chordTable);
-        seen.add(state);
-
-        if (score() > 0) {
+        String state = Arrays.toString(chords);
+        double score = score();
+        if (score > 0.5) {
+            System.out.println(state);
             solutions.add(state);
             return;
         }
         if (seen.contains(state)) {
             return;
         }
-
         seen.add(state);
 
         for (Chord c : chords) {
             for (int voice = 0; voice < 4; voice++) {
                 c.notes[voice].octave = voice + 1;
-                recur(solutions, seen);
+                recur(seen, solutions);
                 c.notes[voice].octave = voice + 2;
-                recur(solutions, seen);
-                for (Note note : Configs.chordTable[chords[voice].number - 1]) {
+                recur(seen, solutions);
+                for (Note note : Configs.chordTable[c.number - 1]) { // This is just flat out wrong. It needs to set
+                                                                     // each note of the chord to the correct range
                     c.notes[voice].name = note.name;
-                    recur(solutions, seen);
+                    recur(seen, solutions);
                 }
             }
 

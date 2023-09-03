@@ -17,7 +17,7 @@ public class Note implements Comparable<Note> {
 
     @Override
     public String toString() {
-        return this.name + "\t Accidental: " + this.accidental + "\t Octave: " + this.octave;
+        return this.name + "  " + this.accidental + "  " + this.octave;
     }
 
     @Override
@@ -124,5 +124,4 @@ public class Note implements Comparable<Note> {
         return q;
     }
 
-    
 }

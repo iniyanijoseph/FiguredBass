@@ -17,9 +17,9 @@ public class Chord {
 
     public Chord(Note[] notes, int number, int inversion, boolean isSeventh) {
         this.notes = new Note[4];
-        //Double Root to prevent null index
-        notes[3] = (notes[3] == null)?notes[0]:notes[3];
-        //Set Inversion
+        // Double Root to prevent null index
+        notes[3] = (notes[3] == null) ? notes[0] : notes[3];
+        // Set Inversion
         for (int i = 0; i < 4; i++) {
             this.notes[i] = notes[(i + inversion) % notes.length];
         }
@@ -27,7 +27,7 @@ public class Chord {
         this.inversion = inversion;
         this.isSeventh = isSeventh;
 
-        //List out Forbidden Parallels
+        // List out Forbidden Parallels
         forbiddenParallels = new HashSet<>();
         forbiddenParallels.add(2);
         forbiddenParallels.add(5);
@@ -59,7 +59,7 @@ public class Chord {
         // Too Few Notes
         for (Note n : notes) {
             if (n == null) {
-                System.out.println("Too Few Notes");
+                // System.out.println("Too Few Notes");
                 return 0;
             }
         }
@@ -78,7 +78,7 @@ public class Chord {
 
         for (String key : noteHash.keySet()) {
             if (noteHash.get(key) > 2) {
-                System.out.println("Note Tripled");
+                // System.out.println("Note Tripled");
                 return 0;
             }
             if (noteHash.get(key) == 2) {
@@ -87,7 +87,7 @@ public class Chord {
                         if (doubled == -1) {
                             doubled = i;
                         } else {
-                            System.out.println("Two Notes Doubled");
+                            // System.out.println("Two Notes Doubled");
                             return 0;
                         }
                     }
@@ -99,7 +99,7 @@ public class Chord {
         // Mandatory Doubling as Neccessary for I 6/4
         if (number == 1 && inversion == 2) {
             if (notes[doubled].name != Configs.keyScale[0].name) {
-                System.out.println("Not Doubled");
+                // System.out.println("Not Doubled");
                 return 0;
             }
         }
@@ -108,15 +108,13 @@ public class Chord {
         for (int i = 1; i < notes.length - 1; i++) {
             // Add more intervals
             if (notes[i].compareTo(notes[i + 1]) < 0) {
-                System.out.println("Voices Crossed");
+                // System.out.println("Voices Crossed");
                 return 0;
             } else {
                 int size = notes[i].compareTo(notes[i + 1]);
                 if (size > 8) {
-                    System.out.println("Chord has Forbidden Interval");
+                    // System.out.println("Chord has Forbidden Interval");
                     return 0;
-                } else {
-                    score *= 5 / size;
                 }
             }
         }
@@ -127,10 +125,11 @@ public class Chord {
     public static double scoreChordMovement(Chord a, Chord b) {
         double score = 1.0;
 
-        //Improper Parallel
+        // Improper Parallel
         for (int[] i : a.riskyIntervals) {
-            if (b.riskyIntervals.contains(i)) { // Doesn't work because .contains uses .equals, which must be overriden for arrays
-                System.out.println("Improper Parallel");
+            if (b.riskyIntervals.contains(i)) { // Doesn't work because .contains uses .equals, which must be overriden
+                                                // for arrays
+                // System.out.println("Improper Parallel");
                 return 0;
             }
         }
@@ -145,21 +144,21 @@ public class Chord {
 
             // Tritone Jump
             if (interval == 4 && intervalQuality == 1 || interval == 5 && intervalQuality == -1) {
-                System.out.println("Tritone Jump");
+                // System.out.println("Tritone Jump");
                 return 0;
             }
             // Large Leaps
             if (i != 0) {
                 if (interval >= 5) {
                     score *= 1 / (2 * interval);
-                    System.out.println("Large Leap");
+                    // System.out.println("Large Leap");
                 }
             }
 
             // 7th Scale Degree Resolves to Tonic
             if (a.notes[i].name == Configs.keyScale[6].name) {
                 if (b.notes[i].name != Configs.keyScale[0].name) {
-                    System.out.println("7th Scale Degree Doesn't Resolve");
+                    // System.out.println("7th Scale Degree Doesn't Resolve");
                     return 0;
                 }
             }
@@ -167,7 +166,7 @@ public class Chord {
             // 4th Scale Degree should resolve to 3rd Scale Degree
             if (a.notes[i].name == Configs.keyScale[3].name) {
                 if (b.notes[i].name != Configs.keyScale[2].name) {
-                    System.out.println("4th Scale Degree Doesn't Resolve");
+                    // System.out.println("4th Scale Degree Doesn't Resolve");
                     return 0;
                 }
             }
@@ -175,12 +174,12 @@ public class Chord {
             // Check if Chordal 7th resolves down by step
             if (a.isSeventh && a.notes[i].isChordalSeventh) {
                 if (a.notes[i].compareTo(b.notes[i]) > 0) {
-                    System.out.println("Chordal 7th Resolving Up");
+                    // System.out.println("Chordal 7th Resolving Up");
                     return 0;
                 }
 
                 if (interval > 2) {
-                    System.out.println("Chordal 7th Not Resolving by Step");
+                    // System.out.println("Chordal 7th Not Resolving by Step");
                     return 0;
                 }
             }
