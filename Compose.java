@@ -20,9 +20,10 @@ public class Compose {
 
     public void recur(HashSet<String> seen, HashSet<String> solutions) {
         String state = Arrays.toString(chords);
+        System.out.println(state);
         double score = score();
         if (score > 0.5) {
-            System.out.println(state);
+            System.out.println("\t***" + state);
             solutions.add(state);
             return;
         }
