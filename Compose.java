@@ -27,7 +27,7 @@ public class Compose {
             return;
 
         String state = Arrays.toString(chords);
-        if(chords[0].toString().equals("[c  1  3, a  0  3, a  0 4, e  0  5]"))
+        if (chords[0].toString().equals("[c  1  3, a  0  3, a  0 4, e  0  5]"))
             out.println(state);
 
         if (score()) {
@@ -45,17 +45,17 @@ public class Compose {
                 c.notes[voice].octave = voice + 2;
                 recur(seen, depth + 1, maxDepth, solutions);
                 for (Note note : Configs.chordTable[c.number - 1]) {
-                    if(note != null){
-                    c.notes[voice].name = note.name;
-                    recur(seen, depth + 1, maxDepth, solutions);
+                    if (note != null) {
+                        c.notes[voice].name = note.name;
+                        recur(seen, depth + 1, maxDepth, solutions);
                     }
                 }
                 c.notes[voice].octave = voice + 3;
                 recur(seen, depth + 1, maxDepth, solutions);
                 for (Note note : Configs.chordTable[c.number - 1]) {
-                    if(note != null){
-                    c.notes[voice].name = note.name;
-                    recur(seen, depth + 1, maxDepth, solutions);
+                    if (note != null) {
+                        c.notes[voice].name = note.name;
+                        recur(seen, depth + 1, maxDepth, solutions);
                     }
                 }
             }
