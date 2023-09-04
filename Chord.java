@@ -58,10 +58,8 @@ public class Chord {
 
         // Too Few Notes
         for (Note n : notes) {
-            if (n == null) {
-                // System.out.println("Too Few Notes");
+            if (n == null|| n.octave == -1)
                 return 0;
-            }
         }
 
         // Incorrect Doubling

@@ -19,10 +19,11 @@ public class Compose {
     }
 
     public void recur(HashSet<String> seen, HashSet<String> solutions) {
+        System.out.println(seen.size());
         String state = Arrays.toString(chords);
         double score = score();
         if (score > 0.5) {
-            System.out.println("\tSolution" + state);
+            System.out.println("\t***" + state);
             solutions.add(state);
             return;
         }
@@ -33,20 +34,19 @@ public class Compose {
 
         for (Chord c : chords) {
             for (int voice = 0; voice < 4; voice++) {
-                // This is just flat out wrong. It needs to set
-                // each note of the chord to the correct range
+                int prevOctave = c.notes[voice].octave;
                 c.notes[voice].octave = voice + 1;
                 recur(seen, solutions);
                 c.notes[voice].octave = voice + 2;
                 recur(seen, solutions);
-
-                // But this is ok
+                c.notes[voice].octave = prevOctave;
                 for (Note note : Configs.chordTable[c.number - 1]) {
+                    String prevName = c.notes[voice].name;
                     c.notes[voice].name = note.name;
                     recur(seen, solutions);
+                    c.notes[voice].name = prevName;
                 }
             }
-            System.out.println(c);
         }
     }
 
