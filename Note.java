@@ -56,8 +56,6 @@ public class Note implements Comparable<Note> {
             if (i == 1 || i == 4){ // Add chordal seventh for II and V chords
                 table[i][3] = new Note(baseScale[(i + 6) % 7].name, baseScale[(i + 6) % 7].accidental, -1);
                 table[i][3].isChordalSeventh = true;
-            }else{
-                table[i][3] = new Note(baseScale[i % 7].name, baseScale[i % 7].accidental, -1);
             }
         }
 

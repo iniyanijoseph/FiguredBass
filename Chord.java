@@ -21,9 +21,7 @@ public class Chord {
 
         // List out Forbidden Parallels
         forbiddenParallels = new HashSet<>();
-        forbiddenParallels.add(2);
         forbiddenParallels.add(5);
-        forbiddenParallels.add(7);
         forbiddenParallels.add(1);
 
         riskyIntervals = new HashSet<>();
@@ -38,7 +36,7 @@ public class Chord {
                 this.notes = new Note[4];
 
                 for (int j = 0; j < 4; j++) {
-                    Note template = chordTable[number - 1][(j + inversion) % notes.length];
+                    Note template = (chordTable[number - 1][(j + inversion) % notes.length] == null)?chordTable[number - 1][0]:chordTable[number - 1][(j + inversion) % notes.length];
                     this.notes[j] = new Note(template.name, template.accidental, template.octave);
                     this.notes[j].octave = j + 2;
                 }

@@ -42,14 +42,14 @@ public class Main {
             System.out.println(chord);
         }
 
-        Compose l = new Compose(chordSet);
+        Compose l = new Compose(chordSet, out);
 
         HashSet<String> solutions = new HashSet<>();
 
-        for (int i = 1; solutions.size() == 0 && i < 300; i++) {
+        for (int i = 1; solutions.size() == 0 && i < 200; i++) {
             HashSet<String> seen = new HashSet<>();
             l.recur(seen, 1, i, solutions);
-            System.out.println(i + "" + solutions);
+            System.out.println(i + "" + solutions);    
         }
         for (String sol : solutions) {
             out.println(sol);
