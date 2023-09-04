@@ -64,8 +64,8 @@ public class Chord {
         // Incorrect Doubling
         HashMap<String, Integer> noteHash = new HashMap<>();
         for (Note note : notes) {
-            if (noteHash.containsKey(note.toString()))
-                noteHash.put(note.name, noteHash.get(note.toString()) + 1);
+            if (noteHash.containsKey(note.name))
+                noteHash.put(note.name, noteHash.get(note.name) + 1);
             else
                 noteHash.put(note.name, 1);
         }
@@ -75,7 +75,6 @@ public class Chord {
 
         for (String key : noteHash.keySet()) {
             if (noteHash.get(key) > 2) {
-                System.out.println("Note Overly Duplicated+");
                 return false;
             }
             if (noteHash.get(key) == 2) {

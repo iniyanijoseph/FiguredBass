@@ -19,15 +19,17 @@ public class Compose {
         return score;
     }
 
-    public void recur(HashSet<String> seen, int depth, int maxDepth) {
-        if(depth == maxDepth){
+    public void recur(HashSet<String> seen, int depth, int maxDepth, HashSet<String> solutions) {
+        if(depth >= maxDepth){
             return;
         }
 
         String state = Arrays.toString(chords);
 
         if (score()) {
-            System.out.println("\t" + state);
+            seen.add(state);
+            solutions.add(state);
+            return;
         }
         if (seen.contains(state)) {
             return;
@@ -37,12 +39,12 @@ public class Compose {
         for (Chord c : chords) {
             for (int voice = 1; voice < 4; voice++) {
                 c.notes[voice].octave = voice + 1;
-                recur(seen, depth + 1, maxDepth);
+                recur(seen, depth + 1, maxDepth, solutions);
                 c.notes[voice].octave = voice + 2;
-                recur(seen, depth + 1, maxDepth);
+                recur(seen, depth + 1, maxDepth, solutions);
                 for (Note note : Configs.chordTable[c.number - 1]) {
                     c.notes[voice].name = note.name;
-                    recur(seen, depth + 1, maxDepth);
+                    recur(seen, depth + 1, maxDepth, solutions);
                 }
             }
         }
