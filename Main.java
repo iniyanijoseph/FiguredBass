@@ -11,7 +11,7 @@ public class Main {
         Compose l = new Compose(new Chord[] { new Chord(cTable[1], 2, 2, true), new Chord(cTable[4], 5, 2, true) });
 
         for (int i = 1; solutions.size() == 0; i++) {
-            l.recur(seen, 1, 100, solutions);
+            l.recur(seen, 1, i, solutions);
         }
         System.out.println(solutions);
     }
