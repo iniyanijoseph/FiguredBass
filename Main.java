@@ -12,7 +12,6 @@ public class Main {
 
         for (int i = 1; solutions.size() == 0; i++) {
             l.recur(seen, 1, 100, solutions);
-            System.out.println(i);
         }
         System.out.println(solutions);
     }
