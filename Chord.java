@@ -15,16 +15,7 @@ public class Chord {
 
     HashSet<Integer> forbiddenParallels;
 
-    public Chord(Note[] notes, int number, int inversion, boolean isSeventh) {
-        this.notes = new Note[4];
-        // Double Root to prevent null index
-        notes[3] = (notes[3] == null) ? notes[0] : notes[3];
-        // Set Inversion
-        for (int i = 0; i < 4; i++) {
-            this.notes[i] = notes[(i + inversion) % notes.length];
-            this.notes[i].octave = i + 2;
-        }
-        this.number = number;
+    public Chord(int inversion, boolean isSeventh) {
         this.inversion = inversion;
         this.isSeventh = isSeventh;
 
@@ -36,6 +27,25 @@ public class Chord {
         forbiddenParallels.add(1);
 
         riskyIntervals = new HashSet<>();
+    }
+
+    public Chord(Note[][] chordTable, int inversion, boolean isSeventh, Note bassNote) {
+        this(inversion, isSeventh);
+
+        for (int i = 0; i < chordTable.length; i++) {
+            if (chordTable[i][inversion].name == bassNote.name) {
+                this.number = i + 1;
+                this.notes = new Note[4];
+
+                for (int j = 0; j < 4; j++) {
+                    Note template = chordTable[number - 1][(j + inversion) % notes.length];
+                    this.notes[j] = new Note(template.name, template.accidental, template.octave);
+                    this.notes[j].octave = j + 2;
+                }
+                this.notes[0].octave = bassNote.octave;
+                break;
+            }
+        }
     }
 
     public void updateChord() {
@@ -57,7 +67,7 @@ public class Chord {
 
         // Too Few Notes
         for (Note n : notes) {
-            if (n == null|| n.octave == -1)
+            if (n == null || n.octave == -1)
                 return false;
         }
 
@@ -82,7 +92,7 @@ public class Chord {
                     if (notes[i].name.equals(key)) {
                         if (doubled == -1) {
                             doubled = i;
-                        }else{
+                        } else {
                             return false;
                         }
                     }
@@ -143,6 +153,7 @@ public class Chord {
             if (i != 0) {
                 if (interval >= 5) {
                     // System.out.println("Large Leap");
+                    return false;
                 }
             }
 
