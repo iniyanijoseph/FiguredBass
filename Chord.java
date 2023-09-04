@@ -22,6 +22,7 @@ public class Chord {
         // Set Inversion
         for (int i = 0; i < 4; i++) {
             this.notes[i] = notes[(i + inversion) % notes.length];
+            this.notes[i].octave = i + 2;
         }
         this.number = number;
         this.inversion = inversion;
@@ -51,24 +52,22 @@ public class Chord {
         }
     }
 
-    public double scoreChord() {
+    public boolean scoreChord() {
         updateChord();
-
-        double score = 1.0;
 
         // Too Few Notes
         for (Note n : notes) {
             if (n == null|| n.octave == -1)
-                return 0;
+                return false;
         }
 
         // Incorrect Doubling
         HashMap<String, Integer> noteHash = new HashMap<>();
         for (Note note : notes) {
             if (noteHash.containsKey(note.toString()))
-                noteHash.put(note.toString(), noteHash.get(note.toString()) + 1);
+                noteHash.put(note.name, noteHash.get(note.toString()) + 1);
             else
-                noteHash.put(note.toString(), 1);
+                noteHash.put(note.name, 1);
         }
 
         // Update the doubled note index
@@ -76,20 +75,18 @@ public class Chord {
 
         for (String key : noteHash.keySet()) {
             if (noteHash.get(key) > 2) {
-                // System.out.println("Note Tripled");
-                return 0;
+                System.out.println("Note Overly Duplicated+");
+                return false;
             }
             if (noteHash.get(key) == 2) {
                 for (int i = 0; i < notes.length; i++) {
                     if (notes[i].name.equals(key)) {
                         if (doubled == -1) {
                             doubled = i;
-                        } else {
-                            // System.out.println("Two Notes Doubled");
-                            return 0;
+                        }else{
+                            return false;
                         }
                     }
-
                 }
             }
         }
@@ -98,7 +95,7 @@ public class Chord {
         if (number == 1 && inversion == 2) {
             if (notes[doubled].name != Configs.keyScale[0].name) {
                 // System.out.println("Not Doubled");
-                return 0;
+                return false;
             }
         }
 
@@ -107,28 +104,26 @@ public class Chord {
             // Add more intervals
             if (notes[i].compareTo(notes[i + 1]) < 0) {
                 // System.out.println("Voices Crossed");
-                return 0;
+                return false;
             } else {
                 int size = notes[i].compareTo(notes[i + 1]);
                 if (size > 8) {
                     // System.out.println("Chord has Forbidden Interval");
-                    return 0;
+                    return false;
                 }
             }
         }
 
-        return score;
+        return true;
     }
 
-    public static double scoreChordMovement(Chord a, Chord b) {
-        double score = 1.0;
-
+    public static boolean scoreChordMovement(Chord a, Chord b) {
         // Improper Parallel
         for (int[] i : a.riskyIntervals) {
             if (b.riskyIntervals.contains(i)) { // Doesn't work because .contains uses .equals, which must be overriden
                                                 // for arrays
                 // System.out.println("Improper Parallel");
-                return 0;
+                return false;
             }
         }
 
@@ -143,12 +138,11 @@ public class Chord {
             // Tritone Jump
             if (interval == 4 && intervalQuality == 1 || interval == 5 && intervalQuality == -1) {
                 // System.out.println("Tritone Jump");
-                return 0;
+                return false;
             }
             // Large Leaps
             if (i != 0) {
                 if (interval >= 5) {
-                    score *= 1 / (2 * interval);
                     // System.out.println("Large Leap");
                 }
             }
@@ -157,7 +151,7 @@ public class Chord {
             if (a.notes[i].name == Configs.keyScale[6].name) {
                 if (b.notes[i].name != Configs.keyScale[0].name) {
                     // System.out.println("7th Scale Degree Doesn't Resolve");
-                    return 0;
+                    return false;
                 }
             }
 
@@ -165,7 +159,7 @@ public class Chord {
             if (a.notes[i].name == Configs.keyScale[3].name) {
                 if (b.notes[i].name != Configs.keyScale[2].name) {
                     // System.out.println("4th Scale Degree Doesn't Resolve");
-                    return 0;
+                    return false;
                 }
             }
 
@@ -173,18 +167,18 @@ public class Chord {
             if (a.isSeventh && a.notes[i].isChordalSeventh) {
                 if (a.notes[i].compareTo(b.notes[i]) > 0) {
                     // System.out.println("Chordal 7th Resolving Up");
-                    return 0;
+                    return false;
                 }
 
                 if (interval > 2) {
                     // System.out.println("Chordal 7th Not Resolving by Step");
-                    return 0;
+                    return false;
                 }
             }
 
         }
 
-        return score;
+        return true;
     }
 
     @Override

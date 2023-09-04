@@ -51,11 +51,13 @@ public class Note implements Comparable<Note> {
 
         for (int i = 0; i < table.length; i++) {
             // Add each
-            table[i][0] = new Note(baseScale[i % 7].name, baseScale[i % 7].accidental, baseScale[i % 7].octave);
-            table[i][1] = new Note(baseScale[(i + 2) % 7].name, baseScale[(i + 2) % 7].accidental, baseScale[(i + 2) % 7].octave);
-            table[i][2] = new Note(baseScale[(i + 4) % 7].name, baseScale[(i + 4) % 7].accidental, baseScale[(i + 4) % 7].octave);
-            if (i == 1 || i == 4) // Add chordal seventh for II and V chords
-                table[i][3] = new Note(baseScale[(i + 6) % 7].name, baseScale[(i + 6) % 7].accidental, baseScale[(i + 6) % 7].octave);
+            table[i][0] = new Note(baseScale[i % 7].name, baseScale[i % 7].accidental, -1);
+            table[i][1] = new Note(baseScale[(i + 2) % 7].name, baseScale[(i + 2) % 7].accidental, -1);
+            table[i][2] = new Note(baseScale[(i + 4) % 7].name, baseScale[(i + 4) % 7].accidental, -1);
+            if (i == 1 || i == 4){ // Add chordal seventh for II and V chords
+                table[i][3] = new Note(baseScale[(i + 6) % 7].name, baseScale[(i + 6) % 7].accidental, -1);
+                table[i][3].isChordalSeventh = true;
+            }
         }
 
         return table;

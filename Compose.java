@@ -8,24 +8,26 @@ public class Compose {
         this.chords = chords;
     }
 
-    public double score() {
-        double score = 1;
+    public boolean score() {
+        boolean score = true;
         for (int i = 0; i < chords.length - 1; i++) {
-            score *= chords[i].scoreChord();
-            score *= Chord.scoreChordMovement(chords[i], chords[i + 1]);
+            score = score && chords[i].scoreChord() && Chord.scoreChordMovement(chords[i], chords[i + 1]);
+            if(!score)
+                return false;
         }
-        score *= chords[chords.length - 1].scoreChord();
+        score = score && chords[chords.length - 1].scoreChord();
         return score;
     }
 
-    public void recur(HashSet<String> seen, HashSet<String> solutions) {
-        System.out.println(seen.size());
-        String state = Arrays.toString(chords);
-        double score = score();
-        if (score > 0.5) {
-            System.out.println("\t***" + state);
-            solutions.add(state);
+    public void recur(HashSet<String> seen, int depth, int maxDepth) {
+        if(depth == maxDepth){
             return;
+        }
+
+        String state = Arrays.toString(chords);
+
+        if (score()) {
+            System.out.println("\t" + state);
         }
         if (seen.contains(state)) {
             return;
@@ -33,18 +35,14 @@ public class Compose {
         seen.add(state);
 
         for (Chord c : chords) {
-            for (int voice = 0; voice < 4; voice++) {
-                int prevOctave = c.notes[voice].octave;
+            for (int voice = 1; voice < 4; voice++) {
                 c.notes[voice].octave = voice + 1;
-                recur(seen, solutions);
+                recur(seen, depth + 1, maxDepth);
                 c.notes[voice].octave = voice + 2;
-                recur(seen, solutions);
-                c.notes[voice].octave = prevOctave;
+                recur(seen, depth + 1, maxDepth);
                 for (Note note : Configs.chordTable[c.number - 1]) {
-                    String prevName = c.notes[voice].name;
                     c.notes[voice].name = note.name;
-                    recur(seen, solutions);
-                    c.notes[voice].name = prevName;
+                    recur(seen, depth + 1, maxDepth);
                 }
             }
         }
